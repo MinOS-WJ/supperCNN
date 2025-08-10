@@ -1,28 +1,20 @@
-# SupperCNN 接口使用说明 (Interface Usage Guide)
+# SupperCNN 接口使用说明与项目依赖 (SupperCNN Interface Guide & Dependencies)
 
 ## 概述 (Overview)
 
-SupperCNN 是一个基于PyTorch的卷积神经网络工具包，提供了简单易用的接口用于图像分类任务。该工具包封装了模型创建、数据处理、模型训练和预测等功能，使开发者能够快速构建和部署图像分类模型。
+SupperCNN 是一个基于 PyTorch 的卷积神经网络工具包，提供简洁易用的接口用于图像分类任务。该工具包整合了数据预处理、模型构建、训练和预测等全流程功能，使开发者无需深入了解神经网络细节即可快速实现图像分类应用。
 
-SupperCNN is a PyTorch-based convolutional neural network toolkit that provides easy-to-use interfaces for image classification tasks. It encapsulates functionalities such as model creation, data processing, model training, and prediction, enabling developers to quickly build and deploy image classification models.
+SupperCNN is a PyTorch-based convolutional neural network toolkit that provides simple interfaces for image classification tasks. It integrates end-to-end functionalities including data preprocessing, model building, training, and prediction, enabling developers to quickly implement image classification applications without deep knowledge of neural networks.
 
-## 主要功能 (Main Features)
+## 核心接口说明 (Core Interface Description)
 
-- 自动数据预处理 (Automatic data preprocessing)
-- 灵活的模型创建 (Flexible model creation)
-- 简化的训练流程 (Simplified training process)
-- 支持单张和批量图像预测 (Support for single and batch image prediction)
-- 训练历史记录与保存 (Training history recording and saving)
+### SupperCNN 类 (SupperCNN Class)
 
-## 接口说明 (Interface Description)
+该类是所有功能的统一入口，提供以下静态方法：
 
-### 1. SupperCNN 类 (SupperCNN Class)
+This class serves as the unified entry point for all functionalities, with the following static methods:
 
-该类提供了所有功能的统一入口，包含以下主要静态方法：
-
-This class provides a unified entry point for all functionalities, including the following main static methods:
-
-#### 1.1 训练模型 (Train Model)
+#### 1. 模型训练 (Model Training)
 
 ```python
 @staticmethod
@@ -45,25 +37,25 @@ def train_model(
 ```
 
 **参数说明 (Parameters):**
-- `data_dir`: 数据集目录路径 (Dataset directory path)
-- `conv_layers`: 卷积层数量 (Number of convolutional layers)
-- `num_classes`: 类别数量 (Number of classes)
-- `image_size`: 图像尺寸 (Image size)
-- `batch_size`: 批处理大小 (Batch size)
-- `epochs`: 训练轮数 (Number of training epochs)
-- `lr`: 学习率 (Learning rate)
-- `val_split`: 验证集比例 (Validation set split ratio)
-- `device`: 训练设备 (Training device)
-- `use_amp`: 是否使用自动混合精度 (Whether to use automatic mixed precision)
-- `save_path`: 模型保存路径 (Model save path)
-- `class_names`: 类别名称列表 (List of class names)
-- `auto_preprocess`: 是否自动预处理数据 (Whether to automatically preprocess data)
-- `preprocessed_dir`: 预处理后数据保存目录 (Directory for preprocessed data)
+- `data_dir`: 原始数据集目录路径 (Path to raw dataset directory)
+- `conv_layers`: 卷积层数量 (Number of convolutional layers, default: 3)
+- `num_classes`: 分类类别数量 (Number of classes, default: 2)
+- `image_size`: 图像尺寸（长和宽）(Image size for resizing, default: 64)
+- `batch_size`: 批处理大小 (Batch size for training, default: 32)
+- `epochs`: 训练轮数 (Number of training epochs, default: 10)
+- `lr`: 学习率 (Learning rate, default: 0.001)
+- `val_split`: 验证集占比 (Validation set ratio, default: 0.2)
+- `device`: 训练设备（如未指定自动选择）(Training device, auto-selected if None)
+- `use_amp`: 是否启用自动混合精度训练（默认GPU自动启用）(Whether to use AMP, auto-enabled for GPU)
+- `save_path`: 模型保存路径（可选）(Path to save model, optional)
+- `class_names`: 类别名称列表（可选）(List of class names, optional)
+- `auto_preprocess`: 是否自动预处理数据 (Whether to auto-preprocess data, default: True)
+- `preprocessed_dir`: 预处理数据保存目录 (Directory for preprocessed data, default: './processed_data')
 
 **返回值 (Return Value):**
-- 训练历史字典，包含训练和验证的准确率及损失 (Training history dictionary containing training and validation accuracy and loss)
+- 训练历史字典，包含训练/验证的准确率和损失值 (Training history dict with train/val accuracy and loss)
 
-#### 1.2 单张图片预测 (Single Image Prediction)
+#### 2. 单张图像预测 (Single Image Prediction)
 
 ```python
 @staticmethod
@@ -75,14 +67,14 @@ def predict_single(
 ```
 
 **参数说明 (Parameters):**
-- `image_path`: 图片路径 (Image path)
-- `model_path`: 模型路径 (Model path)
-- `device`: 预测设备 (Prediction device)
+- `image_path`: 待预测图像路径 (Path to image for prediction)
+- `model_path`: 训练好的模型文件路径 (Path to trained model file)
+- `device`: 预测设备（如未指定自动选择）(Prediction device, auto-selected if None)
 
 **返回值 (Return Value):**
-- 元组 (预测类别, 置信度) (Tuple of (predicted class, confidence))
+- 元组 `(预测类别, 置信度)` (Tuple of `(predicted_class, confidence)`)
 
-#### 1.3 批量图片预测 (Batch Image Prediction)
+#### 3. 批量图像预测 (Batch Image Prediction)
 
 ```python
 @staticmethod
@@ -95,15 +87,15 @@ def predict_batch(
 ```
 
 **参数说明 (Parameters):**
-- `image_dir`: 图片目录 (Image directory)
-- `model_path`: 模型路径 (Model path)
-- `batch_size`: 批处理大小 (Batch size)
-- `device`: 预测设备 (Prediction device)
+- `image_dir`: 包含待预测图像的目录 (Directory containing images for prediction)
+- `model_path`: 训练好的模型文件路径 (Path to trained model file)
+- `batch_size`: 批处理大小 (Batch size for prediction, default: 32)
+- `device`: 预测设备（如未指定自动选择）(Prediction device, auto-selected if None)
 
 **返回值 (Return Value):**
-- 预测结果列表，每个元素为(图像名称, 预测类别, 置信度) (List of prediction results, each element is (image name, predicted class, confidence))
+- 预测结果列表，每个元素为 `(图像名称, 预测类别, 置信度)` (List of tuples `(image_name, predicted_class, confidence)`)
 
-#### 1.4 保存训练历史到CSV (Save Training History to CSV)
+#### 4. 训练历史保存 (Save Training History)
 
 ```python
 @staticmethod
@@ -111,12 +103,27 @@ def save_history_to_csv(history: dict, csv_path: str)
 ```
 
 **参数说明 (Parameters):**
-- `history`: 训练历史字典 (Training history dictionary)
-- `csv_path`: CSV文件路径 (CSV file path)
+- `history`: 训练历史字典（`train_model` 方法的返回值）(Training history dict from `train_model`)
+- `csv_path`: 保存CSV文件的路径 (Path to save CSV file)
+
+#### 5. 数据集预处理 (Dataset Preprocessing)
+
+```python
+@staticmethod
+def preprocess_dataset(source_dir: str, target_dir: str, image_size: int) -> str
+```
+
+**参数说明 (Parameters):**
+- `source_dir`: 原始数据集目录 (Source directory with raw images)
+- `target_dir`: 预处理后数据保存目录 (Target directory for processed images)
+- `image_size`: 目标图像尺寸 (Target size for resizing images)
+
+**返回值 (Return Value):**
+- 预处理后数据目录路径 (Path to preprocessed data directory)
 
 ## 使用示例 (Usage Examples)
 
-### 示例1: 训练模型 (Training a Model)
+### 示例 1: 训练模型 (Training a Model)
 
 ```python
 from supercnn import SupperCNN
@@ -143,7 +150,7 @@ history = SupperCNN.train_model(
 SupperCNN.save_history_to_csv(history, "./training_history.csv")
 ```
 
-### 示例2: 单张图片预测 (Single Image Prediction)
+### 示例 2: 单张图像预测 (Single Image Prediction)
 
 ```python
 from supercnn import SupperCNN
@@ -161,7 +168,7 @@ print(f"置信度: {confidence:.2f}")
 # 置信度: 0.98
 ```
 
-### 示例3: 批量图片预测 (Batch Image Prediction)
+### 示例 3: 批量图像预测 (Batch Image Prediction)
 
 ```python
 from supercnn import SupperCNN
@@ -181,7 +188,7 @@ for image_name, pred_class, conf in results:
 # image3.jpg: bird (0.85)
 ```
 
-### 示例4: 手动预处理数据 (Manual Data Preprocessing)
+### 示例 4: 手动预处理数据 (Manual Data Preprocessing)
 
 ```python
 from supercnn import SupperCNN
@@ -202,13 +209,46 @@ history = SupperCNN.train_model(
 )
 ```
 
+## 硬件要求 (Hardware Requirements)
+
+### 最低配置 (Minimum Requirements)
+- CPU: 支持64位运算的处理器 (64-bit processor)
+- 内存: 4GB RAM
+- 存储: 至少1GB可用空间（用于安装依赖和存储数据/模型）(At least 1GB free space)
+- 显卡: 可选（推荐NVIDIA GPU以加速训练）(Optional, NVIDIA GPU recommended for faster training)
+
+### 推荐配置 (Recommended Requirements)
+- CPU: 多核处理器（如Intel i5/i7/i9或AMD Ryzen系列）(Multi-core processor)
+- 内存: 8GB RAM或更高 (8GB RAM or higher)
+- 存储: 10GB可用空间 (10GB free space)
+- 显卡: 支持CUDA的NVIDIA GPU（计算能力3.5+），用于加速训练 (NVIDIA GPU with CUDA support, Compute Capability 3.5+)
+
+## Python库依赖 (Python Library Dependencies)
+
+| 库名称 (Library) | 版本要求 (Version Requirement) | 用途 (Purpose) |
+|------------------|-------------------------------|----------------|
+| `torch`          | ≥ 1.10.0                      | 深度学习框架 (Deep learning framework) |
+| `torchvision`    | ≥ 0.11.0                      | 计算机视觉工具 (Computer vision tools) |
+| `Pillow`         | ≥ 8.0.0                       | 图像处理 (Image processing) |
+| `tqdm`           | ≥ 4.50.0                      | 进度条显示 (Progress bar display) |
+| `python`         | ≥ 3.7                         | 编程语言 (Programming language) |
+
+## 安装命令 (Installation Commands)
+
+```bash
+# 基础安装 (Basic installation)
+pip install torch>=1.10.0 torchvision>=0.11.0 pillow>=8.0.0 tqdm>=4.50.0
+
+# CUDA加速安装（需根据CUDA版本调整）
+# CUDA acceleration (adjust based on your CUDA version)
+# 例如 (For example):
+# pip install torch==1.13.1+cu117 torchvision==0.14.1+cu117 -f https://download.pytorch.org/whl/cu117/torch_stable.html
+```
+
 ## 注意事项 (Notes)
 
-1. 数据集目录结构应按照类别组织，每个类别一个子目录 (Dataset directory structure should be organized by class, one subdirectory per class)
+1. 数据集目录结构需按类别组织，每个类别一个子目录 (Dataset should be organized by class with one subdirectory per class)
 2. 支持的图像格式: .jpg, .jpeg, .png, .bmp, .gif, .tiff (Supported image formats)
-3. 自动混合精度训练(AMP)仅在CUDA设备上有效 (Automatic Mixed Precision training (AMP) is only effective on CUDA devices)
-4. 模型保存文件包含模型参数、架构信息和类别名称 (Model save files include model parameters, architecture information, and class names)
-
-通过以上接口，您可以轻松完成从数据预处理到模型训练和预测的全流程，无需深入了解复杂的神经网络实现细节。
-
-With the above interfaces, you can easily complete the entire process from data preprocessing to model training and prediction without needing to understand complex neural network implementation details.
+3. 自动混合精度(AMP)训练仅在NVIDIA GPU且安装CUDA的系统上可用 (AMP training is only available on systems with NVIDIA GPUs and CUDA)
+4. 模型保存文件包含模型参数、架构信息和类别名称 (Model save files include parameters, architecture, and class names)
+5. Windows系统上的数据加载器工作进程数会自动限制，以避免多进程问题 (Data loader worker processes are limited on Windows to avoid multi-processing issues)
