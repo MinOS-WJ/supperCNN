@@ -272,17 +272,16 @@ predictor.predict_batch(image_dir: str, batch_size: int) -> List[(image_name, cl
 ## 目录结构 | Directory Structure
 
 ```
-SupperCNN/
-├── supercnn/
-│   ├── __init__.py        # 包初始化和API导出
-│   ├── dataset.py         # 数据集处理
-│   ├── model.py           # 模型创建
-│   ├── trainer.py         # 训练器
-│   ├── predictor.py       # 预测器
-│   ├── utils.py           # 工具函数
-│   └── gui.py             # 图形用户界面
-├── test_gui.py            # GUI测试
-└── test_suppercnn.py      # 功能测试
+
+supercnn/
+├── __init__.py        # 包初始化和API导出
+├── dataset.py         # 数据集处理
+├── model.py           # 模型创建
+├── trainer.py         # 训练器
+├── predictor.py       # 预测器
+├── utils.py           # 工具函数
+└── gui.py             # 图形用户界面
+
 ```
 
 
